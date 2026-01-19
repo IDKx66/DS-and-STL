@@ -31,6 +31,7 @@ namespace idk
             strcpy(_str, str);
         }
 
+        /*
         // 拷贝构造 (深拷贝)
         string(const string &s)
         {
@@ -52,6 +53,23 @@ namespace idk
                 _size = s._size;
                 _capacity = s._capacity;
             }
+            return *this;
+        }
+        */
+
+        // 拷贝构造 (copy-and-swap，现代写法)
+        string(const string &s)
+            : _str(nullptr), _size(0), _capacity(0)
+        {
+            string tmp(s._str);
+            tmp.reserve(s._capacity);
+            swap(tmp);
+        }
+
+        // 赋值重载 (copy-and-swap，现代写法)
+        string &operator=(string s)
+        {
+            swap(s);
             return *this;
         }
 
@@ -170,11 +188,13 @@ namespace idk
         string &operator+=(const string &s)
         {
             append(s.c_str());
+            // this->append(s.c_str());
             return *this;
         }
         string &operator+=(const char *str)
         {
             append(str);
+            // this->append(str);
             return *this;
         }
         string &operator+=(char ch)
